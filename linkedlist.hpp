@@ -2,50 +2,56 @@
 #define LINKED_LIST_HPP
 #include <iostream>
 
+
+  
 template <typename T>
 class LinkedList {
 private:
-  struct Node {
-    Node* next;
-    T data;
-    Node(T data): data(data), next(nullptr){
-    }
-  };
+class Node {
+  friend class LinkedList;
+  Node* next;
+  Node* prev;
+  T data;
+public:
+  Node(T data): data(data), next(nullptr){
+  }
+};  
 
 public:
-  struct iterator {
-    // this should probably be const or sth 
+  class iterator {
+    friend class LinkedList;
     Node* iterNode;
-    // Default constructor 
+  public:
+    /*! Default constructor  */
     iterator(): iterNode(nullptr)
     {
     }
     
-    // Constructor from a node
+    /*!  Constructor from a node */
     iterator(Node* n) : iterNode(n)
     {
     }
 
-    // Dereferences and gets the value of the node
-    const T& operator*() const
+    /*! Dereferences and gets the value of the node */
+    T& operator*() const
     {
       return iterNode->data;
     }
     
-    // Prefix Increment points to the next element in the LinkedList
+    /*! Prefix Increment points to the next element in the LinkedList */
     iterator* operator++()
     {
       iterNode = iterNode->next;
       return this;
     }
     
-    // Compares the two nodes of each iterator
+    /* Compares the two nodes of each iterator */
     bool operator !=(const iterator& other) const
     {
       return iterNode!= other.iterNode;
     }
     
-    // Is the one nodes of the iterator equal to other iterator's node
+    /* Is the one nodes of the iterator equal to other iterator's node */
     bool operator ==(const iterator& other) const
     {
       return iterNode== other.iterNode;
@@ -57,10 +63,16 @@ public:
     { 
     Node* previous = iterNode;
     iterNode = iterNode->next; 
-    return iterator(previous);
+    return iterator{previous};
+    }
+    
+    iterator& operator--()
+    {
+      Node* current = iterNode;
+      iterNode = iterNode->previous;
+      return iterator(current);
     }
 /*
-    iterator& operator--();
     iterator operator--(int);
     value_type& operator*() const;
 */
@@ -71,14 +83,12 @@ public:
     Node* newNode = new Node(value);
     if (!headNode)
     {
-      std::cout << "!headNode" << std::endl;
       headNode = newNode;
     }
     else
     {
       auto tmp = headNode;
       Node* prevTmp = nullptr;
-      std::cout << "tmp" << std::endl;
       while (tmp)
       {
         prevTmp = tmp;
@@ -89,27 +99,45 @@ public:
     size++;
   }
   
-  void insert(iterator it, const T& value)
+  void insert(iterator& it, const T& value)
   {
+    
     Node* newNode = new Node(value);
-    auto tmp = it.iterNode->next;
-    it.iterNode->next = newNode;
-    newNode->next = tmp;
+    // Something is wrong here still figuring it out
+    if (!headNode)
+    {
+      std::cout <<" headNode isempty" << std::endl;
+      headNode = newNode;
+      it = iterator{headNode};
+    }
+    else
+    { 
+      auto oldItNext = it.iterNode->next;
+      if (oldItNext)
+      {
+        std::cout <<" oldItNext"<<  oldItNext << std::endl;
+      }
+      it.iterNode->next = newNode;
+      newNode->next = oldItNext;
+      newNode->prev = it.iterNode;
+    }
+    
+    size++;
   }
   
   iterator begin()
   {
-    return iterator(headNode);
+    return iterator{headNode};
   }
   
   iterator end()
   {
-    return iterator(nullptr);
+    return iterator{nullptr};
   }
 
   iterator erase(iterator it)
   {
-    // if deleting the first node then if this is the only element
+    // If deleting the first node then if this is the only element
     // mark headNode as nullptr and delete the element else make
     // the headNode point to the next element and delete the previous one.
     if (headNode == it.iterNode)
@@ -146,8 +174,14 @@ public:
     }
   }
 public:
-  LinkedList() : size(0), headNode(nullptr){
-  }
+  LinkedList() = default;
+  // Rule of Five
+  // copy constructor
+  LinkedList(LinkedList const& other) = delete;
+  // Move constructor
+  LinkedList(LinkedList &&other) = delete;
+  // assignment operator
+  LinkedList& operator=(LinkedList& other) = delete;
   
   ~LinkedList()
   {
@@ -161,8 +195,8 @@ public:
   }
 
 private:
-  int size;
-  Node* headNode;
+  int size = 0;
+  Node* headNode = nullptr;
 };
 
 #endif //LINKED_LIST_HPP

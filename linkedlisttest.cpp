@@ -63,3 +63,43 @@ TEST(LinkedListTest, EraseTest)
 
   
 }
+
+TEST(LinkedListTest, RangeBasedLoop)
+{
+  LinkedList<int> myList;
+  myList.push_back(2);
+  myList.push_back(3);
+  myList.push_back(4);
+  myList.push_back(5);
+  int counter = 2;
+  for (auto i : myList)
+  {
+    std::cout <<"Karam " << i<< std::endl;
+    ASSERT_EQ(i, counter);
+    counter++;
+  }
+}
+
+TEST(LinkedListTest, InsertTestPlain)
+{
+  LinkedList<int> myList;
+  LinkedList<int>::iterator it;
+  it = myList.begin();
+  myList.insert(it, 2);
+  std::cout << "Insert second" << std::endl;
+  myList.insert(it, 3);
+  myList.insert(it, 4);
+  myList.insert(it, 5);
+  
+  int counter = 2;
+  
+  for (auto i : myList)
+  {
+    
+    std::cout << "i "<<i << "counter " <<  counter << std::endl;
+    ASSERT_EQ(i, counter);
+    counter++;
+  }
+}
+
+
