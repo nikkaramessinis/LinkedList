@@ -78,6 +78,14 @@ public:
 */
   };
   
+  void push_front(const T& value)
+  {
+    Node* newNode = new Node(value);
+    Node* oldHead = headNode;
+    headNode = newNode;
+    headNode->next = oldHead;
+  }
+  
   void push_back(const T& value)
   {
     Node* newNode = new Node(value);
@@ -88,13 +96,11 @@ public:
     else
     {
       auto tmp = headNode;
-      Node* prevTmp = nullptr;
-      while (tmp)
+      while (tmp->next)
       {
-        prevTmp = tmp;
         tmp = tmp->next;
       }
-      prevTmp->next = newNode;
+      tmp->next = newNode;
     }
     size++;
   }
@@ -197,6 +203,7 @@ public:
 private:
   int size = 0;
   Node* headNode = nullptr;
+  Node* lastNode = nullptr;
 };
 
 #endif //LINKED_LIST_HPP

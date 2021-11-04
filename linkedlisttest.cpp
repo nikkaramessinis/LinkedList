@@ -102,4 +102,22 @@ TEST(LinkedListTest, InsertTestPlain)
   }
 }
 
+TEST(LinkedListTest, PushFront)
+{
+  LinkedList<int> myList;
+  LinkedList<int>::iterator it;
+  int i = 0;
+  for (; i<=10; i+=2)
+  {
+    myList.push_front(i);
+  }
+  
+  for (auto itr : myList)
+  {  
+    i-=2;
+    std::cout << "i "<<itr << "counter " <<  i << std::endl;
+    ASSERT_EQ(itr, i);
+  }
+}
+
 
