@@ -121,6 +121,7 @@ TEST(LinkedListTest, PopFront)
 //  myList.pop_front();
   
 }
+
 TEST(LinkedListTest, InitializerList)
 {
   LinkedList<int> myList{1, 2, 3, 4, 5};
@@ -129,8 +130,7 @@ TEST(LinkedListTest, InitializerList)
   {
     ASSERT_EQ(itr, counter++);
   }
-  
-  
+   
 }
 
 TEST(LinkedListTest, Iterators)
@@ -146,4 +146,47 @@ TEST(LinkedListTest, Iterators)
   ASSERT_TRUE(result2 != myList.end());
   ASSERT_TRUE(result3 != myList.end());
   ASSERT_TRUE(result4 == myList.end());  
+}
+
+/*
+template<typename T>                                                            
+std::ostream& operator<<(std::ostream& s, const LinkedList<T>& v) {      
+    s.put('[');                                                                 
+    char comma[3] = {'\0', ' ', '\0'};
+    // this should be cosnt fix that
+    
+    //for (auto& e : v) {                                                   
+    for (auto e : v) {                                                   
+        s << comma << e;                                                        
+        comma[0] = ',';                                                         
+    }                                                                           
+    return s << ']';                                                            
+    } */                                                                              
+ 
+TEST(LinkedListTest, CopyConstructor)
+{
+LinkedList<std::string> words1 {"the", "frogurt", "is", "also", "cursed"};
+LinkedList<std::string> words2 = words1;
+
+auto it1 = words1.begin();
+auto it2 =words2.begin();
+
+// One element is different than the other
+while( it1 != words1.end() && it2 != words2.end() )
+{
+    if( *it1 != *it2 )
+    {
+      ASSERT_TRUE(0);
+    }
+    else
+    {
+      it1++;
+      it2++;
+    }
+}
+
+// One list is bigger than the other
+while( it1 != words1.end() ) ASSERT_TRUE(0); 
+while( it2 != words2.end() ) ASSERT_TRUE(0); 
+
 }

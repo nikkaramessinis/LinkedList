@@ -121,17 +121,17 @@ public:
     size++;
   }
   
-  bool empty()
+  bool empty() const
   {
     return !size;
   }
 
-  iterator begin()
+  iterator begin() const
   {
     return iterator{headNode};
   }
   
-  iterator end()
+  iterator end() const
   {
     return iterator{nullptr};
   }
@@ -190,8 +190,15 @@ public:
     }
   }
   // Rule of Five
-  // copy constructor
-  LinkedList(LinkedList const& other) = delete;
+  // copy constructor other should be const fix that
+  LinkedList(LinkedList const& other)
+  {
+    for (auto it = other.begin(); it!=other.end();it++)
+    {
+      push_back(*it);
+    }
+  }
+  
   // Move constructor
   LinkedList(LinkedList &&other) = delete;
   // assignment operator
