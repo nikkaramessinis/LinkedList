@@ -74,7 +74,6 @@ TEST(LinkedListTest, RangeBasedLoop)
   int counter = 2;
   for (auto i : myList)
   {
-    std::cout <<"Karam " << i<< std::endl;
     ASSERT_EQ(i, counter);
     counter++;
   }
@@ -95,8 +94,6 @@ TEST(LinkedListTest, InsertTestPlain)
   
   for (auto i : myList)
   {
-    
-    std::cout << "i "<<i << "counter " <<  counter << std::endl;
     ASSERT_EQ(i, counter);
     counter++;
   }
@@ -120,4 +117,27 @@ TEST(LinkedListTest, PushFront)
   }
 }
 
+TEST(LinkedListTest, PopFront)
+{
+  LinkedList<int> myList;
+  LinkedList<int>::iterator it;
+  myList.push_front(0);
+  myList.pop_front();
 
+  for (auto i=0; i<5; i++)
+  {
+    myList.push_front(i);
+    myList.pop_front();
+    EXPECT_TRUE(myList.empty());
+  }
+
+  for (auto& itr : myList)
+  {
+    (void)itr;
+    ASSERT_TRUE(0); 
+  }
+    std::cout << "lala" << std::endl;
+  
+//  myList.pop_front();
+  
+}

@@ -1,7 +1,7 @@
 #ifndef LINKED_LIST_HPP
 #define LINKED_LIST_HPP
 #include <iostream>
-
+#include <assert.h>
 
   
 template <typename T>
@@ -9,9 +9,9 @@ class LinkedList {
 private:
 class Node {
   friend class LinkedList;
+  T data;
   Node* next;
   Node* prev;
-  T data;
 public:
   Node(T data): data(data), next(nullptr){
   }
@@ -39,10 +39,10 @@ public:
     }
     
     /*! Prefix Increment points to the next element in the LinkedList */
-    iterator* operator++()
+    LinkedList<T>::iterator& operator++()
     {
       iterNode = iterNode->next;
-      return this;
+      return *this;
     }
     
     /* Compares the two nodes of each iterator */
@@ -70,7 +70,7 @@ public:
     {
       Node* current = iterNode;
       iterNode = iterNode->previous;
-      return iterator(current);
+      return iterator{current};
     }
 /*
     iterator operator--(int);
@@ -84,6 +84,16 @@ public:
     Node* oldHead = headNode;
     headNode = newNode;
     headNode->next = oldHead;
+    size++;
+  }
+  
+  void pop_front()
+  {
+    assert (size && "No elements in the list to pop");
+    auto popped = headNode;
+    headNode = headNode->next;
+    delete popped;
+    size--;
   }
   
   void push_back(const T& value)
@@ -105,6 +115,10 @@ public:
     size++;
   }
   
+  bool empty()
+  {
+    return !size;
+  }
   void insert(iterator& it, const T& value)
   {
     
@@ -158,10 +172,11 @@ public:
       else
       {
         std::cout << "size != 1 " << std::endl;
-        headNode = (++it)->iterNode;
+        headNode = (++it).iterNode;
       }
       std::cout << "deleting" << nodeToDelete.iterNode->data << std::endl;
       delete nodeToDelete.iterNode;
+      return headNode;
     }
     else
     {
@@ -171,12 +186,13 @@ public:
       {
         if (itr == it)
         {
-          prev.iterNode->next = (++itr)->iterNode;
+          prev.iterNode->next = (++itr).iterNode;
           delete it.iterNode;
           break;
         }
         prev = itr;
       }
+      return prev.iterNode->next;
     }
   }
 public:
