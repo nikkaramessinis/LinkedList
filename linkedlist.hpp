@@ -190,7 +190,7 @@ public:
     }
   }
   // Rule of Five
-  // copy constructor other should be const fix that
+  // copy constructor
   LinkedList(LinkedList const& other)
   {
     for (auto it = other.begin(); it!=other.end();it++)
@@ -200,7 +200,11 @@ public:
   }
   
   // Move constructor
-  LinkedList(LinkedList &&other) = delete;
+  LinkedList(LinkedList &&other)
+  {
+    headNode = other.headNode;
+    other.headNode = nullptr;
+  }
   // assignment operator
   LinkedList& operator=(LinkedList& other) = delete;
   
@@ -218,7 +222,6 @@ public:
 private:
   int size = 0;
   Node* headNode = nullptr;
-  Node* lastNode = nullptr;
 };
 
 #endif //LINKED_LIST_HPP

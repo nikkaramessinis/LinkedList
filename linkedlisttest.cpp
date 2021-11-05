@@ -190,3 +190,29 @@ while( it1 != words1.end() ) ASSERT_TRUE(0);
 while( it2 != words2.end() ) ASSERT_TRUE(0); 
 
 }
+
+TEST(LinkedListTest, MoveConstructor)
+{
+// Making sure it doesn't free up memory twice.
+  LinkedList<int> l1 {1,2,3,4,5,6};
+LinkedList<int> l2(std::move(l1));
+
+l2.push_back(7);
+
+int counter = 0;
+for (auto& itr : l2)
+{
+  counter++;
+  ASSERT_EQ(itr, counter);  
+}
+
+ASSERT_EQ(counter, 7);  
+}
+
+
+
+
+
+
+
+
