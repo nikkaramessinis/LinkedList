@@ -2,6 +2,7 @@
 #define LINKED_LIST_HPP
 #include <iostream>
 #include <assert.h>
+#include <initializer_list>
 
   
 template <typename T>
@@ -19,6 +20,15 @@ public:
 
 public:
   class iterator {
+  public:
+    // standard algorithms(including std::find) require that the used iterator
+    // meets the requirements of the Iterator concept.
+    using value_type = Node;
+    using reference = Node&;
+    using pointer = Node*;
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::forward_iterator_tag;
+   
     friend class LinkedList;
     Node* iterNode;
   public:
@@ -60,22 +70,18 @@ public:
     // postFix increment returns an iterator to the previous node
     // but points to the next element in the LinkedList
     iterator operator++(int)
-    { 
-    Node* previous = iterNode;
+    {
+    iterator previous = *this;
     iterNode = iterNode->next; 
-    return iterator{previous};
+    return previous;
     }
     
     iterator& operator--()
     {
-      Node* current = iterNode;
       iterNode = iterNode->previous;
-      return iterator{current};
+      return *this;
     }
-/*
-    iterator operator--(int);
-    value_type& operator*() const;
-*/
+
   };
   
   void push_front(const T& value)
@@ -119,32 +125,7 @@ public:
   {
     return !size;
   }
-  void insert(iterator& it, const T& value)
-  {
-    
-    Node* newNode = new Node(value);
-    // Something is wrong here still figuring it out
-    if (!headNode)
-    {
-      std::cout <<" headNode isempty" << std::endl;
-      headNode = newNode;
-      it = iterator{headNode};
-    }
-    else
-    { 
-      auto oldItNext = it.iterNode->next;
-      if (oldItNext)
-      {
-        std::cout <<" oldItNext"<<  oldItNext << std::endl;
-      }
-      it.iterNode->next = newNode;
-      newNode->next = oldItNext;
-      newNode->prev = it.iterNode;
-    }
-    
-    size++;
-  }
-  
+
   iterator begin()
   {
     return iterator{headNode};
@@ -197,6 +178,17 @@ public:
   }
 public:
   LinkedList() = default;
+  LinkedList(std::initializer_list<T> iList)
+  {
+    if (iList.size() == 0)
+    {
+      return;
+    }
+    for (auto it = iList.begin(); it!=iList.end();it++)
+    {
+      push_back(*it);
+    }
+  }
   // Rule of Five
   // copy constructor
   LinkedList(LinkedList const& other) = delete;

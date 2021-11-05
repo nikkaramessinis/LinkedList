@@ -79,26 +79,6 @@ TEST(LinkedListTest, RangeBasedLoop)
   }
 }
 
-TEST(LinkedListTest, InsertTestPlain)
-{
-  LinkedList<int> myList;
-  LinkedList<int>::iterator it;
-  it = myList.begin();
-  myList.insert(it, 2);
-  std::cout << "Insert second" << std::endl;
-  myList.insert(it, 3);
-  myList.insert(it, 4);
-  myList.insert(it, 5);
-  
-  int counter = 2;
-  
-  for (auto i : myList)
-  {
-    ASSERT_EQ(i, counter);
-    counter++;
-  }
-}
-
 TEST(LinkedListTest, PushFront)
 {
   LinkedList<int> myList;
@@ -140,4 +120,30 @@ TEST(LinkedListTest, PopFront)
   
 //  myList.pop_front();
   
+}
+TEST(LinkedListTest, InitializerList)
+{
+  LinkedList<int> myList{1, 2, 3, 4, 5};
+  int counter = 1;
+  for (auto& itr : myList)
+  {
+    ASSERT_EQ(itr, counter++);
+  }
+  
+  
+}
+
+TEST(LinkedListTest, Iterators)
+{
+  auto is_even = [](int i){ return i%2 == 0; };
+
+  LinkedList<int> myList{1, 2, 3, 4, 5};
+  auto result1 = std::find(myList.begin(), myList.end(), 3);
+  auto result2 = std::find(myList.begin(), myList.end(), 1);
+  auto result3 = std::find_if(myList.begin(), myList.end(), is_even);
+  auto result4 = std::find(myList.begin(), myList.end(), 7);
+  ASSERT_TRUE(result1 != myList.end());
+  ASSERT_TRUE(result2 != myList.end());
+  ASSERT_TRUE(result3 != myList.end());
+  ASSERT_TRUE(result4 == myList.end());  
 }
