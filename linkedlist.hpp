@@ -8,6 +8,7 @@
 template <typename T>
 class LinkedList {
 private:
+  
 class Node {
   friend class LinkedList;
   T data;
@@ -19,6 +20,7 @@ public:
 };  
 
 public:
+  
   class iterator {
   public:
     // standard algorithms(including std::find) require that the used iterator
@@ -31,6 +33,7 @@ public:
    
     friend class LinkedList;
     Node* iterNode;
+    
   public:
     /*! Default constructor  */
     iterator(): iterNode(nullptr)
@@ -67,8 +70,9 @@ public:
       return iterNode== other.iterNode;
     }
     
-    // postFix increment returns an iterator to the previous node
-    // but points to the next element in the LinkedList
+    /* PostFix increment returns an iterator to the previous node
+     * but points to the next element in the LinkedList
+     */
     iterator operator++(int)
     {
     iterator previous = *this;
@@ -81,7 +85,6 @@ public:
       iterNode = iterNode->previous;
       return *this;
     }
-
   };
   
   void push_front(const T& value)
@@ -90,16 +93,16 @@ public:
     Node* oldHead = headNode;
     headNode = newNode;
     headNode->next = oldHead;
-    size++;
+    m_size++;
   }
   
   void pop_front()
   {
-    assert (size && "No elements in the list to pop");
+    assert (m_size && "No elements in the list to pop");
     auto popped = headNode;
     headNode = headNode->next;
     delete popped;
-    size--;
+    m_size--;
   }
   
   void push_back(const T& value)
@@ -118,12 +121,17 @@ public:
       }
       tmp->next = newNode;
     }
-    size++;
+    m_size++;
+  }
+  
+  size_t size() const
+  {
+    return m_size;
   }
   
   bool empty() const
   {
-    return !size;
+    return !m_size;
   }
 
   iterator begin() const
@@ -135,35 +143,31 @@ public:
   {
     return iterator{nullptr};
   }
-
+  
   iterator erase(iterator it)
   {
-    // If deleting the first node then if this is the only element
+    // If deleting the first node and this is the only element
     // mark headNode as nullptr and delete the element else make
-    // the headNode point to the next element and delete the previous one.
+    // the headNode point to the next element and delete.
     if (headNode == it.iterNode)
     {
-      std::cout << "headNode == it.iterNode" << std::endl;
       auto nodeToDelete = it;
-      if (size == 1)
+      if (m_size == 1)
       {
-        std::cout << "size == 1 " << std::endl;
         headNode = nullptr;
       }
       else
       {
-        std::cout << "size != 1 " << std::endl;
         headNode = (++it).iterNode;
       }
-      std::cout << "deleting" << nodeToDelete.iterNode->data << std::endl;
       delete nodeToDelete.iterNode;
+      m_size--;
       return headNode;
     }
     else
     {
-    
       auto prev = begin();
-      for (auto itr = begin(); itr!=end();itr++)
+      for (auto itr = begin(); itr!=end(); itr++)
       {
         if (itr == it)
         {
@@ -173,6 +177,7 @@ public:
         }
         prev = itr;
       }
+      m_size--;
       return prev.iterNode->next;
     }
   }
@@ -180,13 +185,12 @@ public:
   LinkedList() = default;
   LinkedList(std::initializer_list<T> iList)
   {
-    if (iList.size() == 0)
+    if (iList.size())
     {
-      return;
-    }
-    for (auto it = iList.begin(); it!=iList.end();it++)
-    {
-      push_back(*it);
+      for (auto it = iList.begin(); it!=iList.end();it++)
+      {
+        push_back(*it);
+      }
     }
   }
   // Rule of Five
@@ -220,7 +224,7 @@ public:
   }
 
 private:
-  int size = 0;
+  size_t m_size = 0;
   Node* headNode = nullptr;
 };
 
