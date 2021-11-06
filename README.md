@@ -1,4 +1,4 @@
-# LinkedList
-Immediate TODOs
--> Implement clear();
--> Implement assignment operator();
+# LinkedList #
+Immediate TODOs 
+''' Implement clear();
+''' Implement assignment operator();
