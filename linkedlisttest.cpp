@@ -9,9 +9,31 @@ TEST(LinkedListTest, PushBackTest)
   
   it = myList.begin();
   ASSERT_EQ(*it, 1);
-  
+
   auto counter = 1;
-  for (auto itr = myList.begin(); itr!=myList.end();++itr)
+  
+  // myList.begin() is of type iterator since LinkedList<int> is not const
+  // therefore we implictly convert to base const_iterator to execute assign operation
+  for (LinkedList<int>::iterator itr = myList.begin(); itr!=myList.end();++itr)
+  {
+    ASSERT_EQ(*itr, counter++);
+  }
+}
+
+TEST(LinkedListTest, ConstIteratorTest) 
+{
+  LinkedList<int> myList{1,2,3,4,5};
+  const LinkedList<int> myList1{1,2,3,4,5};
+  auto counter = 1;
+  
+  // myList.begin() is of type iterator since LinkedList<int> is not const
+  // therefore we implictly convert to base const_iterator to execute assign operation
+  for (LinkedList<int>::const_iterator itr = myList.begin(); itr!=myList.end();++itr)
+  {
+    ASSERT_EQ(*itr, counter++);
+  }
+  counter = 1;
+  for (LinkedList<int>::const_iterator itr = myList.begin(); itr!=myList.end();++itr)
   {
     ASSERT_EQ(*itr, counter++);
   }
